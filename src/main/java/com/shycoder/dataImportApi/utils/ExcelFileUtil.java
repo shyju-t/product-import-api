@@ -45,8 +45,8 @@ public class ExcelFileUtil {
                 }catch (Exception e){
                     //in case of an exception in one row we are ignoring only that row
                     atLeastOneRowFailed = true;
-                    message = message + "Error while processing " + rowNumber + "th row;";
-                    logger.error("Error while processing {0}th row. Error message: {1}",rowNumber, e);
+                    message = message + "Error while processing row number-" + rowNumber + ";";
+                    logger.error("Error while processing row number-{}. Error message: ",rowNumber, e);
                 }
                 rowNumber++;
             }
@@ -65,7 +65,7 @@ public class ExcelFileUtil {
         } catch (IOException e) {
             job.setStatus(Constants.FAILED);
             job.setMessage("Error while parsing excel file");
-            logger.error("Error while parsing excel file. Error Message: {0}", e);
+            logger.error("Error while parsing excel file. Error Message: ", e);
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
     }

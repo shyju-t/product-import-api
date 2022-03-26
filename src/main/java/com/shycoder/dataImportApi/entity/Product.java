@@ -1,6 +1,7 @@
 package com.shycoder.dataImportApi.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="products")
@@ -188,6 +189,38 @@ public class Product {
 
     public void setJob(Job job) {
         this.job = job;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(productId, product.productId) &&
+                Objects.equals(ean, product.ean) &&
+                Objects.equals(name, product.name) &&
+                Objects.equals(h1, product.h1) &&
+                Objects.equals(secondName, product.secondName) &&
+                Objects.equals(brand, product.brand) &&
+                Objects.equals(author, product.author) &&
+                Objects.equals(otherCategory, product.otherCategory) &&
+                Objects.equals(mainCategory, product.mainCategory) &&
+                Objects.equals(attributeCategories, product.attributeCategories) &&
+                Objects.equals(imageUrl, product.imageUrl) &&
+                Objects.equals(pageLink, product.pageLink) &&
+                Objects.equals(metaTitle, product.metaTitle) &&
+                Objects.equals(metaKeywords, product.metaKeywords) &&
+                Objects.equals(metaDescription, product.metaDescription) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(canonicalLink, product.canonicalLink) &&
+                Objects.equals(noIndexFlag, product.noIndexFlag) &&
+                Objects.equals(isbn, product.isbn) &&
+                Objects.equals(job, product.job);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId, ean, name, h1, secondName, brand, author, otherCategory, mainCategory, attributeCategories, imageUrl, pageLink, metaTitle, metaKeywords, metaDescription, description, canonicalLink, noIndexFlag, isbn, job);
     }
 
     @Override

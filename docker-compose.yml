@@ -2,15 +2,42 @@ version: '3.8'
 services:
   db:
     image: postgres:14.1-alpine
-    restart: always
+    restart: unless-stopped
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=$SQLDB_USER
+      - POSTGRES_PASSWORD=$SQLDB_ROOT_PASSWORD
     ports:
-      - '5432:5432'
+      - $SQLDB_LOCAL_PORT:$SQLDB_DOCKER_PORT
     volumes: 
       - db:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+  api:
+    depends_on:
+      - db
+    build: .
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    environment:
+      SPRING_APPLICATION_JSON: '{
+          "spring.datasource.url"  : "jdbc:postgresql://db:$SQLDB_DOCKER_PORT/$SQLDB_DATABASE",
+          "spring.datasource.username" : "$SQLDB_USER",
+          "spring.datasource.password" : "$SQLDB_ROOT_PASSWORD",
+          "spring.jpa.hibernate.ddl-auto" : "validate",
+          "spring.servlet.multipart.max-file-size" : "2MB",
+          "spring.servlet.multipart.max-request-size" : "2MB",
+          "app.jwt.secret" : "sdgretralksjhfewjoweonowq",
+          "app.jwt.expirationMs" : "1800000",
+          "logging.level.root" : "warn",
+          "logging.level.org.springframework.web" : "debug",
+          "logging.level.org.hibernate" : "error"
+        }'
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
 
 volumes:
   db:
